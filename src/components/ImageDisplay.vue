@@ -10,7 +10,7 @@
     computed: {
       imageUrl() {
         const uniqueId = this.$route.query.id;
-        return `http://localhost:8080/uploads/${uniqueId}.png`;
+        return `https://qrcod-gerador.netlify.app/uploads/${uniqueId}.png`;
       },
     },
   };
