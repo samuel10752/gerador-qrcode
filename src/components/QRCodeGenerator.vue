@@ -1,22 +1,22 @@
 <template>
-  <div>
+  <div class="container">
     <h1>Gerador de QRCode</h1>
     <div class="options">
       <div class="option" @click="setContentType('text')">
         <font-awesome-icon icon="file-alt" size="2x" />
-        <p>Gerar QR Code de Texto</p>
+        <p>Texto</p>
       </div>
       <div class="option" @click="setContentType('url')">
         <font-awesome-icon icon="globe" size="2x" />
-        <p>Gerar QR Code de URL</p>
+        <p>URL</p>
       </div>
       <div class="option" @click="setContentType('video')">
         <font-awesome-icon icon="video" size="2x" />
-        <p>Gerar QR Code de Vídeo</p>
+        <p>Vídeo</p>
       </div>
       <div class="option" @click="setContentType('image')">
         <font-awesome-icon icon="image" size="2x" />
-        <p>Gerar QR Code de Imagem</p>
+        <p>Imagem</p>
       </div>
     </div>
     <div v-if="contentType">
@@ -39,10 +39,12 @@
       <button @click="generateQRCode">Gerar QRCode</button>
     </div>
     <div v-if="loading" class="loading-spinner"></div>
-    <canvas v-show="!loading" ref="canvas"></canvas>
-    <div v-if="imageSrc && !loading">
+    <div class="canvas-container">
+      <canvas v-show="!loading" ref="canvas"></canvas>
+    </div>
+    <div v-if="imageSrc && !loading" class="preview">
       <h2>Pré-visualização da Imagem</h2>
-      <img :src="imageSrc" alt="Pré-visualização" style="max-width: 200px; margin: 20px auto;" />
+      <img :src="imageSrc" alt="Pré-visualização" />
     </div>
   </div>
 </template>
@@ -121,23 +123,44 @@ body {
   background-color: #f0f8ff;
 }
 
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
 h1 {
   text-align: center;
+  color: #007bff;
+  font-family: 'Arial', sans-serif;
 }
 
 .options {
   display: flex;
   justify-content: space-around;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .option {
   text-align: center;
   cursor: pointer;
+  transition: transform 0.2s;
+  margin: 10px;
+  flex: 1 1 100px;
+}
+
+.option:hover {
+  transform: scale(1.1);
 }
 
 .option p {
   margin-top: 10px;
+  color: #333333;
+  font-family: 'Arial', sans-serif;
 }
 
 .input-group {
@@ -145,19 +168,31 @@ h1 {
   align-items: center;
   justify-content: center;
   margin-bottom: 10px;
+  flex-wrap: wrap;
+  width: 100%;
 }
 
 .input-icon {
   margin-right: 10px;
+  color: #007bff;
 }
 
-select,
-input {
+input[type="text"],
+input[type="file"] {
   padding: 10px;
-  width: 60%;
+  width: 100%;
+  max-width: 400px;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s;
+  margin-bottom: 10px;
+}
+
+input[type="text"]:focus,
+input[type="file"]:focus {
+  border-color: #007bff;
+  outline: none;
 }
 
 button {
@@ -170,15 +205,24 @@ button {
   border-radius: 5px;
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 button:hover {
   background-color: #0056b3;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
 }
 
 canvas {
-  display: block;
-  margin: 20px auto;
+  max-width: 100%;
+  height: auto;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -198,5 +242,101 @@ canvas {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.preview {
+  text-align: center;
+}
+
+.preview img {
+  max-width: 100%;
+  height: auto;
+  margin: 20px auto;
+  border: 2px solid #007bff;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 1024px) {
+
+  .h1{
+    padding: 15px;
+  }
+  .container {
+    padding: 15px;
+  }
+
+  .option p {
+    font-size: 1em;
+  }
+
+  button {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .h1{
+    padding: 5px;
+  }
+
+  .options {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .option {
+    flex: 1 1 100%;
+    margin: 5px 0;
+  }
+
+  .input-group {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  input[type="text"],
+  input[type="file"] {
+    max-width: 100%;
+  }
+
+  button {
+    width: 100%;
+    max-width: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  h1 {
+    font-size: 1.5em;
+  }
+
+  .option p {
+    font-size: 0.9em;
+  }
+
+  button {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .preview img {
+    max-width: 100%;
+  }
+
+  .canvas-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  canvas {
+    max-width: 100%;
+    height: auto;
+  }
 }
 </style>
